@@ -30,9 +30,9 @@
 
 ## About
 
-MpGAP is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. It is an easy to use pipeline that adopts well known software for _de novo_ genome assembly of Illumina, Pacbio and Oxford Nanopore sequencing data through illumina only, long reads only or hybrid modes.
+MpGAP is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. It is an easy to use pipeline that adopts well known software for _de novo_ genome assembly of Illumina, Pacbio and Oxford Nanopore sequencing data through illumina-only, long-read-only or hybrid modes.
 
-This pipeline wraps up the following software:
+This pipeline wraps the following software:
 
 || **Source** |
 |:- | :- |
@@ -44,7 +44,7 @@ This pipeline wraps up the following software:
 
 Are you curious about changes between releases? See the [changelog](markdown/CHANGELOG.md).
 
-* I **strongly**, **vividly**, **mightily** recommend the usage of the latest versions hosted in master branch, which is nextflow's default.
+* I **strongly**, **vividly**, **mightily** recommend using the latest version hosted on the master branch, which is nextflow's default.
     + The latest will always have support, bug fixes and generally maitain the same processes (I mainly add things instead of removing) that also were in previous versions.
     + But, if you **really** want to execute an earlier release, please [see the instructions for that](markdown/earlier_releases_instructions.md).
 * Versions below 3.0 are no longer supported.
@@ -57,7 +57,7 @@ This pipeline has two complementary pipelines (also written in nextflow) for [NG
 
 In the pipeline we always try to create a workflow and a execution dynamics that is the most generic possible and is suited for the most possible use cases.
 
-Therefore, feedbacks are very well welcomed. If you believe that your use case is not encompassed in the pipeline, you have enhancement ideas or found a bug, please do not hesitate to [open an issue](https://github.com/fmalmeida/MpGAP/issues/new/choose) to disscuss about it.
+Therefore, feedback is very well welcomed. If you believe that your use case is not encompassed in the pipeline, you have enhancement ideas or found a bug, please do not hesitate to [open an issue](https://github.com/fmalmeida/MpGAP/issues/new/choose) to disscuss about it.
 
 ## Installation
 1. Install Nextflow:
@@ -147,7 +147,7 @@ Nextflow profiles are a set of "sensible defaults" for the resource requirements
 + https://nf-co.re/usage/configuration#basic-configuration-profiles
 + https://www.nextflow.io/docs/latest/config.html#config-profiles
 
-The pipeline have "standard profiles" set to run the workflows with either conda, docker or singularity using the [local executor](https://www.nextflow.io/docs/latest/executor.html), which is nextflow's default and basically runs the pipeline processes in the computer where Nextflow is launched. If you need to run the pipeline using another executor such as sge, lsf, slurm, etc. you can take a look at [nextflow's manual page](https://www.nextflow.io/docs/latest/executor.html) to proper configure one in a new custom profile set in your personal copy of [MpGAP config file](https://github.com/fmalmeida/mpgap/blob/master/nextflow.config) and take advantage that nextflow allows multiple profiles to be used at once, e.g. `-profile conda,sge`.
+The pipeline has "standard profiles" set to run the workflows with either conda, docker or singularity using the [local executor](https://www.nextflow.io/docs/latest/executor.html), which is nextflow's default and basically runs the pipeline processes in the computer where Nextflow is launched. If you need to run the pipeline using another executor (i.e. sge, lsf, slurm) you can take a look at [nextflow's manual page](https://www.nextflow.io/docs/latest/executor.html) to properly configure one in a new custom profile set in your personal copy of [MpGAP config file](https://github.com/fmalmeida/mpgap/blob/master/nextflow.config) and take advantage that nextflow allows multiple profiles to be used at once, e.g. `-profile conda,sge`.
 
 By default, if no profile is chosen, the pipeline will try to load tools from the local machine $PATH. Available pre-set profiles for this pipeline are: `docker/conda/singularity`, you can choose between them as follows:
 
@@ -173,17 +173,17 @@ By default, if no profile is chosen, the pipeline will try to load tools from th
 
 #### Note on conda
 
-:book: Please use conda as last resource
+:book: Please use conda as a last resort
 
 Instructions to create required conda environment are found in the [installation section](#installation)
 
-The usage of conda profile will **only** work in linux-64 machine because some of the tools only have its binaries available for this machine, and others had to be put inside the "bin" dir to avoid version compatibility also were compiled for linux-64. A few examples are: wtdbg2, ALE (used as auxiliary tool in pilon polish step), spades v3.13 for unicycler, and others.
+The usage of conda profile will **only** work in linux-64 machine because some of the tools only have binaries available for this machine, and others had to be put inside the "bin" dir to avoid version compatibility also were compiled for linux-64. A few examples are: wtdbg2, ALE (used as auxiliary tool in pilon polish step), spades v3.13 for unicycler, and others.
 
-Therefore, be aware, `-profile conda` will only work on linux-64 machines. Users in orther systems must use it with docker or singularity.
+Therefore, be aware, `-profile conda` will only work on linux-64 machines. Users in orther systems must use docker or singularity.
 
-Finally, the main conda packages in the `environment.yml` file have been "frozen" to specific versions to make env solving faster. If you saw that I tool has a new update and would like to see it updated in the pipeline, please flag an issue.
+Finally, the main conda packages in the `environment.yml` file have been "frozen" to specific versions to make env solving faster. If you see that a tool has a new update and would like to see it updated in the pipeline, please flag an issue.
 
-Also, since in quast 5.0.2 the automatic download of its busco databases is broken, if using conda you **must** download the busco dbs for quast to properly run the assembly quality check step.
+Also, since Quast 5.0.2 the automatic download of its BUSCO databases is broken, if using conda you **must** download the BUSCO dbs for Quast to properly run the assembly quality check step.
 
 > `CONDA_PREFIX` is the base/root directory of your conda installation
 
@@ -215,11 +215,11 @@ Hybrid assemblies can be produced with two available strategies. Please read mor
 
 #### Strategy 1
 
-It uses the hybrid assembly modes from Unicycler, Haslr and/or SPAdes.
+Uses the hybrid assembly modes from Unicycler, Haslr and/or SPAdes.
 
 #### Strategy 2
 
-It produces a long reads only assembly and polishes (correct errors) it with short reads using Pilon. By default, it runs 4 rounds of polishing (params.pilon_polish_rounds).
+Produces a long-read only assembly and polishes (corrects errors) it with short reads using Pilon. By default, this strategy runs 4 rounds of polishing (params.pilon_polish_rounds).
 
 #### Example:
 
@@ -232,7 +232,7 @@ nextflow run fmalmeida/mpgap \
   --hybrid_strategy "both"
 ```
 
-:fire: This will perform, for **all** samples, both both strategy 1 and strategy 2 hybrid assemblies. Please read more about it in the [manual reference page](https://mpgap.readthedocs.io/en/latest/manual.html) and [samplesheet reference page](https://mpgap.readthedocs.io/en/latest/samplesheet.html).
+:fire: This will perform, for **all** samples, both Strategy 1 and Strategy 2 hybrid assemblies. Please read more about it in the [manual reference page](https://mpgap.readthedocs.io/en/latest/manual.html) and [samplesheet reference page](https://mpgap.readthedocs.io/en/latest/samplesheet.html).
 
 ### Usage
 
@@ -282,7 +282,7 @@ It will result in the following:
 
 ## Known issues
 
-1. Whenever using unicycler with unpaired reads, an odd platform-specific SPAdes-related crash seems do randomly happen as it can be seen in the issue discussed at https://github.com/rrwick/Unicycler/issues/188.
+1. Whenever using unicycler with unpaired reads, an odd platform-specific SPAdes-related crash seems to randomly happen as it can be seen in the issue discussed at https://github.com/rrwick/Unicycler/issues/188.
   + As a workaround, Ryan says to use the `--no_correct` parameter which solves the issue and does not have a negative impact on assembly quality.
   + Therefore, if you run into this error when using unpaired data you can activate this workaroud with:
     + `--unicycler_additional_parameters " --no_correct "`.
